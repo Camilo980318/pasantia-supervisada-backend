@@ -9,6 +9,8 @@ pueda hacer una función, en este caso express
 
 var express = require('express');
 var mongoose = require('mongoose');
+var bodyParser = require('body-parser')
+
 
 
 
@@ -24,6 +26,17 @@ Vamos a crear la aplicación (el servidor express).
 var app = express();
 
 
+// parse application/x-www-form-urlencoded 
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
+
+// Importación de rutas
+var mainRoute = require('./routes/main');
+var usuarioRoute = require('./routes/usuario');
+var loginRoute = require('./routes/login');
+
+
 
 /*
 
@@ -35,7 +48,7 @@ error, que deje pasar con un mensaje de confirmación
 
 */
 
-mongoose.connection.openUri('mongodb://localhost:27017/uscoDB', (err, res) => {
+mongoose.connection.openUri('mongodb://localhost:27017/hospitalDB', (err, res) => {
 
     if (err) {
         throw err;
@@ -58,19 +71,9 @@ metros: request(req), response(res), y next(Dice que cuando se ejecute continue 
 
 */
 
-app.get('/', (req, res, next) => {
-
-    // Recibimos la respuesta respecto al codigo de estado
-    res.status(200).json({
-
-        // Debemos estandarizar las salidas, para que toda la app responda de la misma manera
-        ok: true,
-        mensaje: "Peición realizada correctamente"
-    });
-
-});
-
-
+app.use('/login', loginRoute);
+app.use('/usuario', usuarioRoute);
+app.use('/', mainRoute);
 
 
 
