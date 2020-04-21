@@ -28,31 +28,48 @@ var Usuario = require('../models/usuario');
 
 app.get('/', (req, res, next) => {
 
+    // Desde que registro quiere mostrar el usuario, se envía por la url con la key from
+    // Si se envía nada, por defecto va a ser 0. Además nos asegramos de que sea un número.
+    var from = req.query.from || 0;
+    from = Number(from);
+
+
     // Hacemos un query, este recibirá: err, si pasa algo malo; los datos, si sale todo bien
     // Después del find, le pasamos los campos que queremos mostrar
-    Usuario.find({}, 'nombre email img role').exec((err, usuario) => {
+    Usuario.find({}, 'nombre email img role')
+        // Mostramos desde el registro que el usuario indicó anteriormente
+        .skip(from)
+        // Mostramos de 3 en 3 
+        .limit(3)
+        .exec((err, usuario) => {
 
-        // Comprobamos si está el error, enviamos un mensaje de error y codigo de estado
-        if (err) {
+            // Comprobamos si está el error, enviamos un mensaje de error y codigo de estado
+            if (err) {
 
-            res.status(500).json({
+                res.status(500).json({
 
-                ok: false,
-                mensaje: "Error al leer de la BD",
-                err: err
-            });
+                    ok: false,
+                    mensaje: "Error al leer de la BD",
+                    err: err
+                });
 
 
-            // Si todo sale bien
-        } else {
+                // Si todo sale bien
+            } else {
 
-            res.status(200).json({
-                ok: true,
-                usuarios: usuario
-            });
-        }
+                // Contamos la cantidad de registros que hay en la colección
+                Usuario.count({}, (err, conteo) => {
 
-    });
+                    res.status(200).json({
+                        ok: true,
+                        usuarios: usuario,
+                        total: conteo
+                    });
+
+                });
+            }
+
+        });
 
 });
 

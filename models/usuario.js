@@ -33,4 +33,4 @@ usuarioSchema.plugin(uniqueValidator, { message: '{PATH} ya registrado' });
 
 
 // Exportamos el schema
-module.exports = mongooose.model('usuario', usuarioSchema);
+module.exports = mongooose.model('Usuario', usuarioSchema);

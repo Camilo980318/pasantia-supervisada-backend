@@ -14,9 +14,6 @@ var bodyParser = require('body-parser')
 
 
 
-
-
-
 /*
 
 Lo siguiente, es inicializar variables, es decir, vamos a usar esa librería.
@@ -35,6 +32,11 @@ app.use(bodyParser.json())
 var mainRoute = require('./routes/main');
 var usuarioRoute = require('./routes/usuario');
 var loginRoute = require('./routes/login');
+var hospitalRoute = require('./routes/hospital');
+var medicoRoute = require('./routes/medico');
+var busquedaRoute = require('./routes/busqueda');
+var uploadRoute = require('./routes/upload');
+var imagenesRoute = require('./routes/imagen');
 
 
 
@@ -71,6 +73,11 @@ metros: request(req), response(res), y next(Dice que cuando se ejecute continue 
 
 */
 
+app.use('/img', imagenesRoute);
+app.use('/upload', uploadRoute);
+app.use('/buscar', busquedaRoute);
+app.use('/medico', medicoRoute);
+app.use('/hospital', hospitalRoute);
 app.use('/login', loginRoute);
 app.use('/usuario', usuarioRoute);
 app.use('/', mainRoute);
